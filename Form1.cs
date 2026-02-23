@@ -22,25 +22,28 @@ namespace Repaso1
         private void LeerEmpleado()
         {
             string fileName = @"Empleados.txt";
-            
-            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            StreamReader reader = new StreamReader(stream);
 
-            while (reader.Peek() > -1)
+            if (File.Exists(fileName))
             {
-                //Lee 1 empleado del archivo en cada vuelta del ciclo
-                Empleado empleado = new Empleado();
-                empleado.NoEmpleado = Convert.ToInt16(reader.ReadLine());
-                empleado.Nombre = reader.ReadLine();
-                empleado.Apellido = reader.ReadLine();
-                empleado.SueldoHora = Convert.ToDecimal(reader.ReadLine());
 
-                //Guardar el empleado en la lista
-                empleados.Add(empleado);
-               
-            }
-            reader.Close();
+                FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                StreamReader reader = new StreamReader(stream);
 
+                while (reader.Peek() > -1)
+                {
+                    //Lee 1 empleado del archivo en cada vuelta del ciclo
+                    Empleado empleado = new Empleado();
+                    empleado.NoEmpleado = Convert.ToInt16(reader.ReadLine());
+                    empleado.Nombre = reader.ReadLine();
+                    empleado.Apellido = reader.ReadLine();
+                    empleado.SueldoHora = Convert.ToDecimal(reader.ReadLine());
+
+                    //Guardar el empleado en la lista
+                    empleados.Add(empleado);
+
+                }
+                reader.Close();
+            }            
         }
 
         private void GuardarEmpleado()
