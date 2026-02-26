@@ -13,10 +13,32 @@ namespace Repaso1
 {
     public partial class Form1 : Form
     {
-        List<Empleado> empleados = new List<Empleado>();
         public Form1()
         {
             InitializeComponent();
+        }
+        List<Empleado> empleados = new List<Empleado>();
+        List<Asistencia> asistencias = new List<Asistencia>();        
+        List<Reporte> reportes = new List<Reporte>();
+        private void LeerAsistencia()
+        {
+            string fileName = @"Asistencia.txt";
+            if (File.Exists(fileName))
+            {
+                FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                StreamReader reader = new StreamReader(stream);
+                while (reader.Peek() > -1)
+                {
+                    Asistencia asistencia = new Asistencia();
+                    asistencia.NoEmpleado = Convert.ToInt16(reader.ReadLine());
+                    asistencia.HorasTrabajadas = Convert.ToInt16(reader.ReadLine());
+                    asistencia.Mes = Convert.ToInt16(reader.ReadLine());
+
+                    asistencias.Add(asistencia);
+                }
+                reader.Close();
+            }
+
         }
 
         private void LeerEmpleado()
@@ -64,6 +86,12 @@ namespace Repaso1
         {
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = empleados;
+
+            dataGridViewAsistencia.DataSource = null;
+            dataGridViewAsistencia.DataSource = asistencias;
+
+            dataGridViewReporte.DataSource = null;
+            dataGridViewReporte.DataSource = reportes;
         }
 
         private void buttonIngreso_Click(object sender, EventArgs e)
@@ -89,6 +117,7 @@ namespace Repaso1
         private void Form1_Load(object sender, EventArgs e)
         {
             LeerEmpleado();
+            LeerAsistencia();
             Mostrar();
 
             numericUpDownEmpleado.Value = empleados.Count + 1;
@@ -98,6 +127,29 @@ namespace Repaso1
         private void tabPage1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonReporte_Click(object sender, EventArgs e)
+        {
+            foreach (var empleado in empleados)
+            {
+                foreach (var asistencia in asistencias)
+                {
+                    if (empleado.NoEmpleado == asistencia.NoEmpleado)
+                    {
+                        Reporte reporte = new Reporte();
+                        reporte.Nombre = empleado.Nombre;
+                        reporte.Apellido = empleado.Apellido;
+                        reporte.SueldoMes = empleado.SueldoHora
+                                           * asistencia.HorasTrabajadas;
+                        reporte.Mes = asistencia.Mes;
+
+                        reportes.Add(reporte);
+                    }
+
+                }                
+            }
+            Mostrar();
         }
     }
 }
